@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>자바스크립트 연습</title>
+</head>
+<body>
+
+
+
+<script>
+    // Todo-list
+    // 1. getLottoCount 함수 구현
+    // 2. getLottos 함수 구현
+    // 3. getLotto 함수 구현
+    // 4. getRandomNumber 함수 구현
+
+    // 1. setLuckyNumber() 구현
+    // 2. getMatchCount() 구현
+    // 3. updateLottoResultInfo() 구현
+let money;
+let lottos;
+
+function buyLottos(inputMoney) {
+    money = inputMoney;
+    let length = getLottoCount(money);
+    lottos = getLottos(length);
+
+    console.log("로또 " + length + "개를 발행했습니다.");
+    lottos.forEach(lotto => console.log(JSON.stringify(lotto)));
+}
+
+function getLottoCount(money) {
+    return money / 1000;
+}
+
+function getLottos(length) {
+    let lottos =[];
+    for(let i = 0; i < length; i++) {
+        lottos.push(getLotto());
+    }
+    return lottos;
+}
+
+function getLotto() {
+    let lotto = new Set();
+    while(lotto.size !== 6)
+        lotto.add(getRandomNumber());
+
+    return Array.from(lotto).sort((a, b) => { return a - b; });
+}
+
+function getRandomNumber() {
+    return Math.floor(Math.random() * 45) + 1;
+}
+
+function setLuckyNumber(luckyNumbers) {
+    printResult(luckyNumbers);
+}
+
+function getMatchCount(lotto, luckyNumbers) {
+    return luckyNumbers.filter((number) => lotto.includes(number)).length;
+}
+
+function getLottoResultInfo(luckyNumbers) {
+    let lottoResult = new Array(7).fill(0);
+    lottos.forEach((lotto) => {lottoResult[getMatchCount(lotto, luckyNumbers)] += 1;} );
+    return lottoResult;
+}
+
+function printResult(luckyNumbers) {
+    let lottoResult = getLottoResultInfo(luckyNumbers);
+    console.log("lottoResult", JSON.stringify(lottoResult));
+    console.log("당첨 통계");
+    console.log("--------");
+    
+    let prizes = {
+        3 : 5000,
+        4 : 50000,
+        5 : 1500000,
+        6 : 2000000000
+    }
+
+    let totalPrizes = 0;
+    // 통계 구하기
+    for (let i = 3; i < 7; i++) {
+        console.log(i + "개 일치 (" + prizes[i] + "원) - " + lottoResult[i] + "개");
+        totalPrizes += prizes[i] * lottoResult[i];
+    }
+
+    // 수익률 구하기
+    console.log("totalPrizes: "+totalPrizes);
+    console.log("money", money);
+    console.log("수익률", totalPrizes / money * 100);
+    console.log("나의 수익률은 " + (totalPrizes / money * 100) + "%입니다.");
+}
+</script>
+
+
+
+
+
+</body>
+</html>
